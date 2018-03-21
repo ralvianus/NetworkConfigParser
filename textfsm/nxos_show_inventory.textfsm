@@ -1,0 +1,11 @@
+Value Filldown HOSTNAME (\S+)
+Value NAME (.+) 
+Value DESCRIPTION (.*) 
+Value PRODUCT_ID (\S*) 
+Value VID (\S*) 
+Value SERIAL_NUMBER (\S+) 
+ 
+Start 
+  ^${HOSTNAME}[>#].* 
+  ^NAME: "${NAME}".*DESCR: "${DESCRIPTION}" 
+  ^PID: ${PRODUCT_ID}.*VID: ${VID}.*SN: ${SERIAL_NUMBER} -> Record

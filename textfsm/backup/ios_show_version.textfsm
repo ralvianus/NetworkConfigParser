@@ -1,0 +1,12 @@
+Value Filldown hostname (\S+)
+Value Version ([^ ,]+)
+Value Uptime (.*)
+Value ConfigRegister (\w+)
+Value Boot_Image (.*)
+
+Start
+  ^${hostname}[>#].* 
+  ^Cisco IOS .*Version ${Version},
+  ^.*uptime is ${Uptime}
+  ^System image file is "${Boot_Image}"
+  ^Configuration register is ${ConfigRegister} -> Record

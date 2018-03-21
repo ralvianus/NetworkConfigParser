@@ -1,0 +1,11 @@
+Value FEATURE (\w+)
+Value INSTALL (Yes|No)
+Value STATUS (Unused|In use)
+Value EXPIRY (\S+)
+
+Start
+  ^.*------------ -> Features
+
+Features
+#  ^.+ -> Continue.Record
+  ^${FEATURE}\s+${INSTALL}\s+\S+\s+${STATUS}\s+${EXPIRY} -> Record

@@ -1,0 +1,9 @@
+Value VLAN_ID (\w+)
+Value INTERFACE (\S+)
+Value TYPE (.*)
+Value BPDU_SENT (\d+)
+Value BPDU_RECEIVED (\d+)
+
+Start
+  ^\s+Port\s+\d+\s+(${INTERFACE})\s+of\s+${VLAN_ID}\s+is\s+${TYPE}
+  ^\s+BPDU:\s+sent\s+${BPDU_SENT},\s+received\s+${BPDU_RECEIVED} -> Record

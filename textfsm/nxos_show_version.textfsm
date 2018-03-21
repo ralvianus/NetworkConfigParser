@@ -1,0 +1,10 @@
+Value DEVICE_NAME (\S+)
+Value NXOS_VERSION (\d+.\d+(.+)?)
+Value KICKSTART_IMAGE (\S+)
+Value BOOT_IMAGE (\S+)
+
+Start
+  ^${DEVICE_NAME}#
+  ^\s*system:\s*version\s${NXOS_VERSION}
+  ^\s*kickstart image file is:\s*${KICKSTART_IMAGE}
+  ^\s*system image file is:\s*${BOOT_IMAGE} -> Record

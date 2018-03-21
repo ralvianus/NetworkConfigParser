@@ -1,0 +1,22 @@
+Value INTERFACE (([a-zA-Z])\w+|([a-zA-Z])\w+/\d+|([a-zA-Z])\w+/\d+/\d+|mgmt\d+|Port-channel\d+|Loopback\d+|Vlan\d+)
+Value LINK_STATUS (\w+)
+Value PROTOCOL_STATUS (.*)
+Value HARDWARE_TYPE ([\w ]+)
+Value ADDRESS ([a-zA-Z0-9]+.[a-zA-Z0-9]+.[a-zA-Z0-9]+)
+Value DESCRIPTION (.*)
+Value IP_ADDRESS (\d+\.\d+\.\d+\.\d+\/\d+)
+Value MTU (\d+)
+Value BANDWIDTH (\d+\s+\w+)
+Value DELAY (\d+\s+\w+)
+Value ENCAPSULATION (\w+)
+Value QUEUE_STRATEGY (.*)
+
+Start
+  ^${INTERFACE} is ${LINK_STATUS}.*protocol is ${PROTOCOL_STATUS}
+  ^\s+Hardware is ${HARDWARE_TYPE} -> Continue
+  ^.*address is ${ADDRESS}.* -> Continue
+  ^\s+Description: ${DESCRIPTION} -> Continue
+  ^\s+MTU ${MTU}.*BW ${BANDWIDTH}.*DLY ${DELAY} -> Continue
+  ^\s+Internet address is ${IP_ADDRESS} -> Continue
+  ^\s+Encapsulation ${ENCAPSULATION} -> Continue
+  ^\s+Queueing strategy: ${QUEUE_STRATEGY} -> Record

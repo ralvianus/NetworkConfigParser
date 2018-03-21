@@ -1,0 +1,8 @@
+Value BUNDLE_INTERFACE (Po\d+)
+Value BUNDLE_PROTO (\w+)
+Value IFACE_1 (Eth\d+\/\d+)
+Value IFACE_2 (Eth\d+\/\d+)
+
+Start
+  ^\d+\s+${BUNDLE_INTERFACE}\S+\s+Eth\s+${BUNDLE_PROTO}\s+${IFACE_1}\S+\s+${IFACE_2}\S+ -> Record
+

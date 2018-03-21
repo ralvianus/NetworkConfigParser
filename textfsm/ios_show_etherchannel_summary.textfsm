@@ -1,0 +1,17 @@
+Value GROUP_NUMBER (\d+)
+Value STATUS (\w+)
+Value PROTOCOL (LACP|PAgP|-)
+Value List MEMBER_PORT ((Gi|Te).+?/\d+)
+Value List PORT_STATUS (\w)
+
+Start
+  ^\d+ -> Continue.Record
+  ^\d+\s+Po${GROUP_NUMBER}\S${STATUS}\S\s+${PROTOCOL}\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  ^\d+\s+Po\d+\S\w+\S\s+(LACP|PAgP|-)\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+(Gi|Te).+?\S\d+\S\w+\S\s+${MEMBER_PORT}\S${PORT_STATUS}\S -> Continue
+  
