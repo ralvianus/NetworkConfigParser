@@ -1,0 +1,9 @@
+Value INTERFACE (([a-zA-Z])\w+/\d+|Ethernet\d+/\d+/\d+|mgmt\d+|Po\d+|Lo\d+|Vlan\d+)
+Value IP_ADDRESS (\d+.\d+.\d+.\d+/\d+)
+
+Start
+  ^IP Route Table for VRF.* -> Routes
+
+Routes
+  ^${IP_ADDRESS}\S+\s+ubest/mbest.*
+  ^\s+\Svia\s+\S+\s+${INTERFACE}.* -> Record

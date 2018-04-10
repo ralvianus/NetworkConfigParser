@@ -3,7 +3,7 @@ Value NAME (.+)
 Value STATUS (\w+)
 Value VLAN (\w+|f-path)
 Value DUPLEX (full|auto|half)
-Value SPEED (auto|\w+-\d+|\d+|\w+-\d+\w+|40G|\w+-\d+\w)
+Value SPEED (auto|\w+-\d+|\d+|\w+-\d+\w+|40G|10G|\w+-\d+\w)
 Value TYPE (.*)
 
 Start
