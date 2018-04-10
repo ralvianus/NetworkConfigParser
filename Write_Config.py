@@ -53,7 +53,7 @@ def Write_Body(document,Subtitle,Data, FileName):
     document.add_paragraph(Data, style='Normal').alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     #document.add_page_break()
     document.save('%s.docx' % FileName)
-    print >> log, ("Body Content has been written to docx file")
+    #print >> log, ("Body Content has been written to docx file")
     print ("Body Content has been written to docx file")
 
 def Write_Code(document, Subtitle, Code, FileName):
@@ -62,7 +62,7 @@ def Write_Code(document, Subtitle, Code, FileName):
     document.add_page_break()
 
     document.save('%s.docx' % FileName)
-    print >> log, ("Code Content has been written to docx file")
+    #print >> log, ("Code Content has been written to docx file")
     print ("Code Content has been written to docx file")
 
 def main():

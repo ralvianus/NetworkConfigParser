@@ -33,7 +33,7 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 			template_name = "./textfsm/ios_show_ip_bgp_summary.textfsm"
 		elif Command == 'show interface status':
 			template_name = "./textfsm/ios_show_interfaces_status.textfsm"
-		elif Command == 'show mac-address-table':
+		elif Command == 'show mac address-table':
 			template_name = "./textfsm/ios_show_mac-address-table.textfsm"
 		elif Command == 'show ip arp':
 			template_name = "./textfsm/ios_show_ip_arp.textfsm"
@@ -42,7 +42,7 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 		elif Command == 'show etherchannel summary':
 			template_name = "./textfsm/ios_show_etherchannel_summary.textfsm"
 		else:
-			print >> log, ("Command %s is not matched with Template" % (Command))
+			#print >> log, ("Command %s is not matched with Template" % (Command))
 			print ("Template Not Found")
 			return
 
@@ -55,6 +55,8 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 			template_name = "./textfsm/nxos_show_vlan.textfsm"
 		elif Command == 'show cdp neighbor':
 			template_name = "./textfsm/nxos_show_cdp_neighbor.textfsm"
+		elif Command == 'show cdp neighbor detail':
+			template_name = "./textfsm/nxos_show_cdp_neighbors_detail.textfsm"
 		elif Command == 'show interface':
 			template_name = "./textfsm/nxos_show_interface.textfsm"
 		elif Command == 'show fex':
@@ -71,12 +73,14 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 			template_name = "./textfsm/nxos_show_feature.textfsm"
 		elif Command == 'show license usage':
 			template_name = "./textfsm/nxos_show_license_usage.textfsm"
-		elif Command == 'show mac-address-table':
+		elif Command == 'show mac address-table':
 			template_name = "./textfsm/nxos_show_mac_address-table.textfsm"
 		elif Command == 'show ip arp':
 			template_name = "./textfsm/nxos_show_ip_arp.textfsm"
+		elif Command == 'show ip route direct':
+			template_name = "./textfsm/nxos_show_ip_route_direct.textfsm"
 		else:
-			print >> log, ("Command %s is not matched with Template" % (Command))
+			#print >> log, ("Command %s is not matched with Template" % (Command))
 			print ("Template Not Found")
 			return
 
@@ -104,12 +108,12 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 		elif Command == 'show inventory':
 			template_name = "./textfsm/arista_eos_show_inventory.textfsm"
 		else:
-			print >> log, ("Command %s is not matched with Template" % (Command))
+			#print >> log, ("Command %s is not matched with Template" % (Command))
 			print ("Template Not Found")
 			return
 
 	else:
-		print >> log, ("Command %s is not matched with Template" % (Command))
+		#print >> log, ("Command %s is not matched with Template" % (Command))
 		print ("Template Not Found")
 		return
 
@@ -131,15 +135,16 @@ def TextFSM(raw_data, Hostname, Command, device_type):
 	#thread.append(t2)
 	#t2.start()
 
-	print >> log, ("Parsing %s of %s is completed" % (Command, Hostname))
+	#print >> log, ("Parsing %s of %s is completed" % (Command, Hostname))
 	print ("Parsing %s of %s is completed" % (Command, Hostname))
+	return
 
 def Write_JSON(Hostname, Command, re_table, fsm_results):
 	import json
 	from collections import OrderedDict
 
-	isAnalyzed = raw_input('Do you want to compare JSON output with existing baseline?(Yes/No) : ').lower()
-	Baseline_Filename = ""
+	#isAnalyzed = input('Do you want to compare JSON output with existing baseline?(Yes/No) : ').lower()
+	#Baseline_Filename = ""
 
 	# Check Path existence, if not exist, create a new directory
 	path = "./output/%s" % Hostname
@@ -167,20 +172,23 @@ def Write_JSON(Hostname, Command, re_table, fsm_results):
 		json.dump(JSON_Result, JSON_Output, indent=3)
 
 	# Print Logs
-	print >> log, ("Writing JSON Formatted file of %s - %s is completed" % (Hostname, Command))
+	#print >> log, ("Writing JSON Formatted file of %s - %s is completed" % (Hostname, Command))
 	print ("Writing JSON Formatted file of %s - %s is completed" % (Hostname, Command))
 
-	if (isAnalyzed == 'y' or isAnalyzed == 'yes'):
-		compare_json(Hostname, Command, Baseline_Filename, JSON_Output)
+	#if (isAnalyzed == 'y' or isAnalyzed == 'yes'):
+	#	compare_json(Hostname, Command, Baseline_Filename, JSON_Output)
 
 def Write_Summary_Excel(Hostname):
 	#Point to the directory
 	Format = '%Y%m%d'
 	Filename = './output/%s/%s_%s.xlsx' % (Hostname, Hostname, datetime.now().strftime(Format))
 
+	try:
 	#Create workbook and worksheet
-	wb = openpyxl.load_workbook(Filename)
-	ws = wb.create_sheet('Summary')
+		wb = openpyxl.load_workbook(Filename)
+		ws = wb.create_sheet('Summary')
+	except:
+		return
 
 	# Create the Interface Name
 	Interface_Sheet = wb.get_sheet_by_name('show interface status')
@@ -188,31 +196,56 @@ def Write_Summary_Excel(Hostname):
 	for row in range(2, Interface_Sheet.max_row):
 		Interfaces.append(Interface_Sheet.cell(row=row, column=1).value)
 
+	#Create Full Interface Name
+	Full_Interface_Sheet = wb.get_sheet_by_name('show interface')
+	Full_Interfaces = []
+	for row in range(2, Full_Interface_Sheet.max_row):
+		Full_Interfaces.append(Full_Interface_Sheet.cell(row=row, column=1).value)
+
 	#Create Header table
 	ws.cell(row=1, column=1).value = "Port"
-	ws.cell(row=1, column=2).value = "Description"
-	ws.cell(row=1, column=3).value = "Status"
-	ws.cell(row=1, column=4).value = "VLAN"
-	ws.cell(row=1, column=5).value = "Type"
-	ws.cell(row=1, column=6).value = "Detected MAC Address"
-	ws.cell(row=1, column=7).value = "Detected IP Address"
+	ws.cell(row=1, column=2).value = "Port"
+	ws.cell(row=1, column=3).value = "Description"
+	ws.cell(row=1, column=4).value = "Status"
+	ws.cell(row=1, column=5).value = "VLAN"
+	ws.cell(row=1, column=6).value = "Duplex"
+	ws.cell(row=1, column=7).value = "Speed"
+	ws.cell(row=1, column=8).value = "Type"
+	ws.cell(row=1, column=9).value = "Detected MAC Address"
+	ws.cell(row=1, column=10).value = "Detected IP Address"
 
-	#Create the Initial formula
-	ws.cell(row=2, column=1).value = "Eth1/1"
-	ws.cell(row=2, column=2).value = "=VLOOKUP(A2,'show interface status'!$A$1:$O$1000,2,FALSE)"
-	ws.cell(row=2, column=3).value = "=VLOOKUP(A2,'show interface status'!$A$1:$G$1000,3,FALSE)"
-	ws.cell(row=2, column=4).value = "=VLOOKUP(A2,'show interface status'!$A$1:$G$1000,4,FALSE)"
-	ws.cell(row=2, column=5).value = "=VLOOKUP(A2,'show interface status'!$A$1:$G$1000,7,FALSE)"
-	ws.cell(row=2, column=6).value = "=VLOOKUP(A2,'show mac-address-table'!$A$1:$F$5000,3,FALSE)"
-	ws.cell(row=2, column=7).value = "=VLOOKUP(F2,'show ip arp'!$A$1:$E$5000,2,FALSE)"
+	# Write Formula from Interface Table
+	for Col in range (3, 9):
+		for Row in range(2, Interface_Sheet.max_row):
+			ws.cell(row=Row, column=Col).value = "=VLOOKUP(A%d,'show interface status'!$A$1:$O$1000,%d,FALSE)" % (Row, (Col-1))
+		Col += 1
+
+	# Write Formula from Full_Interface Table
+	Col = 9
+	for Row in range(2, Full_Interface_Sheet.max_row):
+		ws.cell(row=Row, column=Col).value = "=VLOOKUP(B%d,'show mac address-table'!$A$1:$F$5000,3,FALSE)" % Row
+
+	# Write Formula for IP ARP
+	Col = 10
+	for Row in range(2, Full_Interface_Sheet.max_row):
+		ws.cell(row=Row, column=Col).value = "=VLOOKUP(I%d,'show ip arp'!$A$1:$F$5000,2,FALSE)" % Row
 
 	# Initialize worksheet
 	Row = 2
 
+	# Insert Interface
 	for Interface in Interfaces:
 		ws.cell(row=Row, column=1).value = Interface
 		Row += 1
-		#print row
+
+	# Initialize worksheet
+	Row = 2
+
+	# Insert Full Interface
+	for Full_Interface in Full_Interfaces:
+		ws.cell(row=Row, column=2).value = Full_Interface
+		Row += 1
+
 	#Adjust the column width automatically based on value length
 	dims = {}
 	for row in ws.rows:
@@ -226,7 +259,7 @@ def Write_Summary_Excel(Hostname):
 	wb.save(filename=Filename)
 
 	# Print Logs
-	print >> log, ("Writing Summary page of %s is completed" % (Hostname))
+	#print >> log, ("Writing Summary page of %s is completed" % (Hostname))
 	print ("Writing Summary page of %s is completed" % (Hostname))
 
 def Write_XLSX_File(Hostname, Command, re_table, fsm_results):
@@ -286,15 +319,16 @@ def Write_XLSX_File(Hostname, Command, re_table, fsm_results):
 	wb.save(filename=Filename)
 
 	# Print Success Message
-	print >> log, ("Writing XLS Formatted file of %s - %s is completed" % (Hostname, Command))
+	#print >> log, ("Writing XLS Formatted file of %s - %s is completed" % (Hostname, Command))
 	print ("Writing XLS Formatted file of %s - %s is completed" % (Hostname, Command))
+	return
 
 def main():
 	t0 = time()
 	print ("Start Parsing Configuration...")
 
 	# User intervention for parse to spreadsheet and write to docx selection
-	isSummarised = raw_input('Do you want to summarise interfaces information?(Yes/No) : ').lower()
+	isSummarised = input('Do you want to summarise interfaces information?(Yes/No) : ').lower()
 
 	with open("./File/file.csv", "r") as SourceText:
 		thread = []
@@ -321,7 +355,7 @@ def main():
 				#thread.append(t)
 				#t.start()
 
-	print "Total Parsing time:", round(time()-t0, 3), "s"
+	print ("Total Parsing time:", round(time()-t0, 3), "s")
 
 if __name__ == "__main__":
 	# If this Python file runs by itself, run below command. If imported, this section is not run
